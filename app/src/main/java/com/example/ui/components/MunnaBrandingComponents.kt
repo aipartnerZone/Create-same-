@@ -76,20 +76,21 @@ import com.example.ui.theme.MunnaTextWhite
 import kotlin.math.roundToInt
 
 /**
- * Custom Canvas-drawn Munna AI friendly robot mascot logo.
+ * Custom Canvas-drawn Munna AI friendly 3D-styled robot mascot logo
+ * with glowing antenna orb, sky-blue headphones, visor, happy cyan eyes, and 'M' chest badge.
  */
 @Composable
 fun MunnaRobotLogo(
     modifier: Modifier = Modifier,
-    size: Dp = 44.dp,
+    size: Dp = 48.dp,
     isAnimated: Boolean = false
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "robot_glow")
     val glowAlpha by infiniteTransition.animateFloat(
-        initialValue = 0.55f,
-        targetValue = if (isAnimated) 1.0f else 0.75f,
+        initialValue = 0.65f,
+        targetValue = if (isAnimated) 1.0f else 0.85f,
         animationSpec = infiniteRepeatable(
-            animation = tween(1200, easing = FastOutSlowInEasing),
+            animation = tween(1000, easing = FastOutSlowInEasing),
             repeatMode = RepeatMode.Reverse
         ),
         label = "eye_glow"
@@ -98,58 +99,72 @@ fun MunnaRobotLogo(
     Box(
         modifier = modifier
             .size(size)
+            .shadow(6.dp, CircleShape, ambientColor = MunnaCyanGlow, spotColor = MunnaSkyBlue)
             .clip(CircleShape)
             .background(
                 Brush.radialGradient(
-                    colors = listOf(MunnaSkyBlueDeep, MunnaCardNavy)
+                    colors = listOf(MunnaSkyBlueDeep, MunnaCardNavy, MunnaNavyDeep)
                 )
             )
-            .border(1.5.dp, MunnaSkyBlue.copy(alpha = 0.8f), CircleShape),
+            .border(1.8.dp, MunnaCyanGlow.copy(alpha = 0.85f), CircleShape),
         contentAlignment = Alignment.Center
     ) {
-        Canvas(modifier = Modifier.fillMaxSize().padding(5.dp)) {
+        Canvas(modifier = Modifier.fillMaxSize().padding(4.dp)) {
             val w = this.size.width
             val h = this.size.height
 
-            // Side headphones (left & right)
+            // 1. Antenna stem & glowing cyan orb at top
             drawRoundRect(
-                color = MunnaSkyBlue,
-                topLeft = Offset(w * 0.04f, h * 0.30f),
-                size = Size(w * 0.12f, h * 0.38f),
-                cornerRadius = CornerRadius(w * 0.06f, w * 0.06f)
+                color = Color(0xFF94A3B8),
+                topLeft = Offset(w * 0.47f, h * 0.08f),
+                size = Size(w * 0.06f, h * 0.12f),
+                cornerRadius = CornerRadius(w * 0.03f, w * 0.03f)
             )
-            drawRoundRect(
-                color = MunnaSkyBlue,
-                topLeft = Offset(w * 0.84f, h * 0.30f),
-                size = Size(w * 0.12f, h * 0.38f),
-                cornerRadius = CornerRadius(w * 0.06f, w * 0.06f)
-            )
-
-            // Robot white helmet
-            drawRoundRect(
-                color = Color(0xFFF1F5F9),
-                topLeft = Offset(w * 0.14f, h * 0.16f),
-                size = Size(w * 0.72f, h * 0.68f),
-                cornerRadius = CornerRadius(w * 0.28f, w * 0.28f)
+            drawCircle(
+                color = MunnaCyanGlow.copy(alpha = glowAlpha),
+                radius = w * 0.065f,
+                center = Offset(w * 0.50f, h * 0.07f)
             )
 
-            // Dark navy visor screen
+            // 2. Side headphones (left & right)
+            drawRoundRect(
+                color = MunnaSkyBlueBright,
+                topLeft = Offset(w * 0.05f, h * 0.30f),
+                size = Size(w * 0.12f, h * 0.32f),
+                cornerRadius = CornerRadius(w * 0.05f, w * 0.05f)
+            )
+            drawRoundRect(
+                color = MunnaSkyBlueBright,
+                topLeft = Offset(w * 0.83f, h * 0.30f),
+                size = Size(w * 0.12f, h * 0.32f),
+                cornerRadius = CornerRadius(w * 0.05f, w * 0.05f)
+            )
+
+            // 3. Robot white helmet
+            drawRoundRect(
+                color = Color(0xFFF8FAFC),
+                topLeft = Offset(w * 0.15f, h * 0.17f),
+                size = Size(w * 0.70f, h * 0.56f),
+                cornerRadius = CornerRadius(w * 0.24f, w * 0.24f)
+            )
+
+            // 4. Dark navy visor screen
             drawRoundRect(
                 color = Color(0xFF071124),
-                topLeft = Offset(w * 0.22f, h * 0.28f),
-                size = Size(w * 0.56f, h * 0.44f),
-                cornerRadius = CornerRadius(w * 0.18f, w * 0.18f)
+                topLeft = Offset(w * 0.22f, h * 0.26f),
+                size = Size(w * 0.56f, h * 0.38f),
+                cornerRadius = CornerRadius(w * 0.16f, w * 0.16f)
             )
 
-            // Happy glowing cyan eyes (curved arcs)
+            // 5. Happy glowing cyan eyes (curved arcs)
             val eyeColor = MunnaCyanGlow.copy(alpha = glowAlpha)
             drawArc(
                 color = eyeColor,
                 startAngle = 195f,
                 sweepAngle = 150f,
                 useCenter = false,
-                topLeft = Offset(w * 0.29f, h * 0.40f),
-                size = Size(w * 0.15f, h * 0.16f),
+                topLeft = Offset(w * 0.28f, h * 0.35f),
+                size = Size(w * 0.16f, h * 0.15f),
                 style = Stroke(width = w * 0.065f, cap = StrokeCap.Round)
             )
             drawArc(
@@ -157,20 +172,46 @@ fun MunnaRobotLogo(
                 startAngle = 195f,
                 sweepAngle = 150f,
                 useCenter = false,
-                topLeft = Offset(w * 0.56f, h * 0.40f),
-                size = Size(w * 0.15f, h * 0.16f),
+                topLeft = Offset(w * 0.56f, h * 0.35f),
+                size = Size(w * 0.16f, h * 0.15f),
                 style = Stroke(width = w * 0.065f, cap = StrokeCap.Round)
             )
 
-            // Gentle smile arc in visor
+            // 6. Friendly smile arc in visor
             drawArc(
-                color = MunnaSkyBlue.copy(alpha = 0.9f),
+                color = MunnaSkyBlue.copy(alpha = 0.95f),
                 startAngle = 20f,
                 sweepAngle = 140f,
                 useCenter = false,
-                topLeft = Offset(w * 0.42f, h * 0.52f),
-                size = Size(w * 0.16f, h * 0.10f),
+                topLeft = Offset(w * 0.41f, h * 0.46f),
+                size = Size(w * 0.18f, h * 0.09f),
                 style = Stroke(width = w * 0.045f, cap = StrokeCap.Round)
+            )
+
+            // 7. Robot chest collar & glowing 'M' badge at bottom
+            drawRoundRect(
+                color = Color(0xFFE2E8F0),
+                topLeft = Offset(w * 0.28f, h * 0.74f),
+                size = Size(w * 0.44f, h * 0.20f),
+                cornerRadius = CornerRadius(w * 0.10f, w * 0.10f)
+            )
+            drawCircle(
+                color = MunnaSkyBlueDeep,
+                radius = w * 0.11f,
+                center = Offset(w * 0.50f, h * 0.84f)
+            )
+            // Draw 'M' inside chest badge
+            val mPath = androidx.compose.ui.graphics.Path().apply {
+                moveTo(w * 0.44f, h * 0.89f)
+                lineTo(w * 0.44f, h * 0.79f)
+                lineTo(w * 0.50f, h * 0.85f)
+                lineTo(w * 0.56f, h * 0.79f)
+                lineTo(w * 0.56f, h * 0.89f)
+            }
+            drawPath(
+                path = mPath,
+                color = Color.White,
+                style = Stroke(width = w * 0.035f, cap = StrokeCap.Round)
             )
         }
     }
